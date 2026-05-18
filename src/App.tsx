@@ -149,8 +149,8 @@ function App() {
                       title="Zoom"
                     />
                   </div>
-                  <div style={{ position: 'absolute', left: '50%', transform: 'translateX(-50%)', fontSize: '0.95rem', color: 'rgba(255,255,255,0.8)', fontWeight: 600, pointerEvents: 'none', letterSpacing: '0.5px' }}>
-                    Portfolio
+                  <div className="glass-title">
+                    Portfolio — Abhijit Singha
                   </div>
                 </div>
                 <div className="glass-content" style={{ height: isMaximized ? 'calc(100% - 64px)' : 'auto', overflowY: 'auto' }}>
