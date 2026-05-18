@@ -1,10 +1,10 @@
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { Send, Loader2 } from 'lucide-react';
 import { motion } from 'framer-motion';
-import { ID } from 'appwrite';
-import { databases, appwriteConfig } from '../../lib/appwrite';
+import emailjs from '@emailjs/browser';
 
 export function Contact() {
+  const form = useRef<HTMLFormElement>(null);
   const [formState, setFormState] = useState({ name: '', email: '', message: '' });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle');
@@ -13,24 +13,38 @@ export function Contact() {
     e.preventDefault();
     setIsSubmitting(true);
     setSubmitStatus('idle');
+
+    const serviceId = import.meta.env.VITE_EMAILJS_SERVICE_ID;
+    const templateId = import.meta.env.VITE_EMAILJS_TEMPLATE_ID;
+    const publicKey = import.meta.env.VITE_EMAILJS_PUBLIC_KEY;
+
+    if (!serviceId || !templateId || !publicKey) {
+      console.error("EmailJS configuration is missing.");
+      setSubmitStatus('error');
+      setIsSubmitting(false);
+      return;
+    }
+
     try {
-      if (!appwriteConfig.databaseId || !appwriteConfig.contactsCollectionId) {
-        throw new Error("Missing Appwrite Contact configurations.");
-      }
-      await databases.createDocument(
-        appwriteConfig.databaseId,
-        appwriteConfig.contactsCollectionId,
-        ID.unique(),
+      await emailjs.send(
+        serviceId,
+        templateId,
         {
-           name: formState.name,
-           email: formState.email,
-           message: formState.message
-        }
+          from_name: formState.name,
+          from_email: formState.email,
+          user_name: formState.name,
+          user_email: formState.email,
+          message: formState.message,
+          to_name: 'Abhijit', 
+          reply_to: formState.email,
+        },
+        publicKey
       );
+      
       setSubmitStatus('success');
       setFormState({ name: '', email: '', message: '' });
     } catch (error) {
-      console.error("Failed to submit message:", error);
+      console.error("Failed to send email:", error);
       setSubmitStatus('error');
     } finally {
       setIsSubmitting(false);
@@ -46,8 +60,8 @@ export function Contact() {
         transition={{ duration: 0.6 }}
         style={{ marginBottom: '3rem', textAlign: 'center' }}
       >
-        <h2 style={{ fontSize: '3.5rem', marginBottom: '1rem', fontFamily: 'var(--font-display)' }}>Get in <span className="text-gradient-primary">Touch</span></h2>
-        <p style={{ color: 'var(--text-muted)', fontSize: '1.25rem', maxWidth: '800px', margin: '0 auto', lineHeight: 1.6 }}>
+        <h2 style={{ fontSize: '3rem', marginBottom: '1rem', fontFamily: 'var(--font-display)' }}>Get in <span className="text-gradient-primary">Touch</span></h2>
+        <p style={{ color: 'var(--text-muted)', fontSize: '1.1rem', maxWidth: '800px', margin: '0 auto', lineHeight: 1.6, fontFamily: 'Lora, serif' }}>
           Have a project in mind or just want to say hi? I'd love to hear from you.
         </p>
       </motion.div>
@@ -70,42 +84,45 @@ export function Contact() {
         ) : (
           <form onSubmit={handleContactSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
             <div>
-              <label htmlFor="name" style={{ display: 'block', marginBottom: '0.5rem', color: 'var(--text-main)', fontWeight: 500 }}>Name</label>
+              <label htmlFor="name" style={{ display: 'block', marginBottom: '0.5rem', color: 'var(--text-main)', fontWeight: 500, fontSize: '0.9rem', fontFamily: 'Lora, serif' }}>Name</label>
               <input 
                 type="text" 
                 id="name" 
+                name="user_name"
                 required 
                 value={formState.name}
                 onChange={(e) => setFormState({...formState, name: e.target.value})}
-                style={{ width: '100%', padding: '1rem', background: 'rgba(0,0,0,0.3)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '8px', color: 'white', outline: 'none', transition: 'border 0.2s' }}
+                style={{ width: '100%', padding: '0.8rem', background: 'rgba(0,0,0,0.3)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '8px', color: 'white', outline: 'none', transition: 'border 0.2s', fontSize: '0.85rem', fontFamily: 'Lora, serif' }}
                 onFocus={(e) => e.target.style.borderColor = 'var(--primary)'}
                 onBlur={(e) => e.target.style.borderColor = 'rgba(255,255,255,0.1)'}
                 placeholder="John Doe"
               />
             </div>
             <div>
-              <label htmlFor="email" style={{ display: 'block', marginBottom: '0.5rem', color: 'var(--text-main)', fontWeight: 500 }}>Email Address</label>
+              <label htmlFor="email" style={{ display: 'block', marginBottom: '0.5rem', color: 'var(--text-main)', fontWeight: 500, fontSize: '0.9rem', fontFamily: 'Lora, serif' }}>Email Address</label>
               <input 
                 type="email" 
                 id="email" 
+                name="user_email"
                 required 
                 value={formState.email}
                 onChange={(e) => setFormState({...formState, email: e.target.value})}
-                style={{ width: '100%', padding: '1rem', background: 'rgba(0,0,0,0.3)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '8px', color: 'white', outline: 'none', transition: 'border 0.2s' }}
+                style={{ width: '100%', padding: '0.8rem', background: 'rgba(0,0,0,0.3)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '8px', color: 'white', outline: 'none', transition: 'border 0.2s', fontSize: '0.85rem', fontFamily: 'Lora, serif' }}
                 onFocus={(e) => e.target.style.borderColor = 'var(--primary)'}
                 onBlur={(e) => e.target.style.borderColor = 'rgba(255,255,255,0.1)'}
                 placeholder="john@example.com"
               />
             </div>
             <div>
-              <label htmlFor="message" style={{ display: 'block', marginBottom: '0.5rem', color: 'var(--text-main)', fontWeight: 500 }}>Message</label>
+              <label htmlFor="message" style={{ display: 'block', marginBottom: '0.5rem', color: 'var(--text-main)', fontWeight: 500, fontSize: '0.9rem', fontFamily: 'Lora, serif' }}>Message</label>
               <textarea 
                 id="message" 
+                name="message"
                 required 
                 rows={5}
                 value={formState.message}
                 onChange={(e) => setFormState({...formState, message: e.target.value})}
-                style={{ width: '100%', padding: '1rem', background: 'rgba(0,0,0,0.3)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '8px', color: 'white', outline: 'none', resize: 'vertical', transition: 'border 0.2s' }}
+                style={{ width: '100%', padding: '0.8rem', background: 'rgba(0,0,0,0.3)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '8px', color: 'white', outline: 'none', resize: 'vertical', transition: 'border 0.2s', fontSize: '0.85rem', fontFamily: 'Lora, serif' }}
                 onFocus={(e) => e.target.style.borderColor = 'var(--primary)'}
                 onBlur={(e) => e.target.style.borderColor = 'rgba(255,255,255,0.1)'}
                 placeholder="Tell me about your project..."
@@ -113,14 +130,14 @@ export function Contact() {
             </div>
             {submitStatus === 'error' && (
               <div style={{ padding: '1rem', background: 'rgba(239, 68, 68, 0.1)', color: '#ef4444', borderRadius: '8px', border: '1px solid rgba(239, 68, 68, 0.2)' }}>
-                Failed to send message. Please ensure your backend contact collection is configured properly.
+                Failed to send message. Please check your EmailJS configuration or try again later.
               </div>
             )}
             <button 
               type="submit" 
               disabled={isSubmitting} 
               className="btn btn-primary" 
-              style={{ width: '100%', justifyContent: 'center', marginTop: '1rem' }}
+              style={{ width: '100%', justifyContent: 'center', marginTop: '1rem', fontSize: '0.9rem', fontFamily: 'Lora, serif' }}
             >
               {isSubmitting ? (
                 <><Loader2 size={20} className="animate-spin" /> Sending...</>
