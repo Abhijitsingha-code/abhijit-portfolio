@@ -14,15 +14,15 @@ export function Hero({ profile, appwriteStatus, opacity, scale }: HeroProps) {
   const isOnline = appwriteStatus === 'connected';
   const statusLabel =
     appwriteStatus === 'checking' ? 'Connecting…' :
-    appwriteStatus === 'connected' ? 'Available for Projects' :
-    'Offline Mode';
+      appwriteStatus === 'connected' ? 'Available for Projects' :
+        'Offline Mode';
 
   return (
     <motion.section
       className="hero-section container"
       style={{ opacity, scale }}
     >
-      <div style={{ maxWidth: '820px', margin: '0 auto', textAlign: 'center', padding: '1rem 0' }}>
+      <div style={{ minWidth: '850px', maxWidth: '850px', margin: '0 auto', textAlign: 'center', padding: '1rem 0' }}>
 
         {/* Status badge */}
         <motion.div

@@ -10,25 +10,25 @@ interface SkillsProps {
 }
 
 const DEFAULT_SKILLS = [
-  { name: 'React',           iconName: 'Boxes',     category: 'Frontend', color: '#61dafb' },
-  { name: 'TypeScript',      iconName: 'Terminal',  category: 'Frontend', color: '#3178c6' },
-  { name: 'Tailwind CSS',    iconName: 'Layers',    category: 'Frontend', color: '#38bdf8' },
-  { name: 'Framer Motion',   iconName: 'Sparkles',  category: 'Frontend', color: '#e879f9' },
-  { name: 'Node.js',         iconName: 'Server',    category: 'Backend',  color: '#5fa04e' },
-  { name: 'PostgreSQL',      iconName: 'Database',  category: 'Backend',  color: '#336791' },
-  { name: 'Appwrite',        iconName: 'Shield',    category: 'Backend',  color: '#f02e65' },
-  { name: 'REST APIs',       iconName: 'Globe',     category: 'Backend',  color: '#60a5fa' },
-  { name: 'Git & GitHub',    iconName: 'GitBranch', category: 'Tools',    color: '#f97316' },
-  { name: 'VS Code',         iconName: 'Code',      category: 'Tools',    color: '#0078d4' },
-  { name: 'Figma',           iconName: 'Pen',       category: 'Tools',    color: '#ff7262' },
-  { name: 'React Native',    iconName: 'Smartphone',category: 'Mobile',   color: '#61dafb' },
+  { name: 'React', iconName: 'Boxes', category: 'Frontend', color: '#61dafb' },
+  { name: 'TypeScript', iconName: 'Terminal', category: 'Frontend', color: '#3178c6' },
+  { name: 'Tailwind CSS', iconName: 'Layers', category: 'Frontend', color: '#38bdf8' },
+  { name: 'Framer Motion', iconName: 'Sparkles', category: 'Frontend', color: '#e879f9' },
+  { name: 'Node.js', iconName: 'Server', category: 'Backend', color: '#5fa04e' },
+  { name: 'PostgreSQL', iconName: 'Database', category: 'Backend', color: '#336791' },
+  { name: 'Appwrite', iconName: 'Shield', category: 'Backend', color: '#f02e65' },
+  { name: 'REST APIs', iconName: 'Globe', category: 'Backend', color: '#60a5fa' },
+  { name: 'Git & GitHub', iconName: 'GitBranch', category: 'Tools', color: '#f97316' },
+  { name: 'VS Code', iconName: 'Code', category: 'Tools', color: '#0078d4' },
+  { name: 'Figma', iconName: 'Pen', category: 'Tools', color: '#ff7262' },
+  { name: 'React Native', iconName: 'Smartphone', category: 'Mobile', color: '#61dafb' },
 ];
 
 const CATEGORY_META: Record<string, { label: string; color: string; bg: string }> = {
-  Frontend: { label: 'Frontend',      color: '#60a5fa', bg: 'rgba(96, 165, 250, 0.08)' },
-  Backend:  { label: 'Backend',       color: '#34d399', bg: 'rgba(52, 211, 153, 0.08)' },
-  Tools:    { label: 'Dev Tools',     color: '#f59e0b', bg: 'rgba(245, 158, 11, 0.08)' },
-  Mobile:   { label: 'Mobile',        color: '#a78bfa', bg: 'rgba(167, 139, 250, 0.08)' },
+  Frontend: { label: 'Frontend', color: '#60a5fa', bg: 'rgba(96, 165, 250, 0.08)' },
+  Backend: { label: 'Backend', color: '#34d399', bg: 'rgba(52, 211, 153, 0.08)' },
+  Tools: { label: 'Dev Tools', color: '#f59e0b', bg: 'rgba(245, 158, 11, 0.08)' },
+  Mobile: { label: 'Mobile', color: '#a78bfa', bg: 'rgba(167, 139, 250, 0.08)' },
 };
 
 export function Skills({ containerVariants, itemVariants, skills }: SkillsProps) {
@@ -44,7 +44,7 @@ export function Skills({ containerVariants, itemVariants, skills }: SkillsProps)
         whileInView="visible"
         viewport={{ once: true, margin: '-100px' }}
         variants={containerVariants}
-        style={{ maxWidth: '820px', margin: '0 auto' }}
+        style={{ minWidth: '850px', maxWidth: '850px', margin: '0 auto' }}
       >
         {/* Section Header */}
         <motion.div variants={itemVariants} style={{ marginBottom: '3rem' }}>

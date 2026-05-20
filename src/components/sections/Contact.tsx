@@ -64,7 +64,7 @@ export function Contact() {
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true, margin: '-100px' }}
         transition={{ duration: 0.6 }}
-        style={{ maxWidth: '820px', margin: '0 auto 3rem' }}
+        style={{ minWidth: '850px', maxWidth: '850px', margin: '0 auto 3rem' }}
       >
         <div className="section-eyebrow">Contact</div>
         <h2 style={{ fontSize: 'clamp(2.2rem, 5vw, 3.5rem)', marginBottom: '0.8rem', fontFamily: 'var(--font-display)' }}>

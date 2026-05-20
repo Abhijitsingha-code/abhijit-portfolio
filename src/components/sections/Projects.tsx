@@ -43,7 +43,7 @@ export function Projects({ projects }: ProjectsProps) {
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true, margin: '-100px' }}
         transition={{ duration: 0.6 }}
-        style={{ maxWidth: '820px', margin: '0 auto 3.5rem' }}
+        style={{ minWidth: '850px', maxWidth: '850px', margin: '0 auto 3.5rem' }}
       >
         <div className="section-eyebrow">Portfolio</div>
         <h2

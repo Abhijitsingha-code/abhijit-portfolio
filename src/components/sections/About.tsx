@@ -15,7 +15,7 @@ const stats = [
 
 const highlights = [
   { icon: Briefcase, label: 'Open to Freelance', color: '#60a5fa' },
-  { icon: Heart,     label: 'Passion for Clean Code', color: '#f472b6' },
+  { icon: Heart, label: 'Passion for Clean Code', color: '#f472b6' },
 ];
 
 export function About({ containerVariants, itemVariants }: AboutProps) {
@@ -26,7 +26,7 @@ export function About({ containerVariants, itemVariants }: AboutProps) {
         whileInView="visible"
         viewport={{ once: true, margin: '-100px' }}
         variants={containerVariants}
-        style={{ maxWidth: '820px', margin: '0 auto' }}
+        style={{ minWidth: '850px', maxWidth: '850px', margin: '0 auto' }}
       >
         {/* Section header */}
         <motion.div variants={itemVariants}>
