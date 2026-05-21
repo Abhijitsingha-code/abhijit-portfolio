@@ -1,13 +1,15 @@
-import type { Models } from 'appwrite';
+// Sanity document types — no Appwrite Models dependency
 
-export interface ProfileData extends Models.Document {
+export interface ProfileData {
+  _id: string;
   name?: string;
   title?: string;
   description?: string;
   resumeUrl?: string;
 }
 
-export interface ProjectData extends Models.Document {
+export interface ProjectData {
+  _id: string;
   title: string;
   description: string;
   bg?: string;
@@ -15,9 +17,14 @@ export interface ProjectData extends Models.Document {
   tags?: string[];
   sourceCodeUrl?: string;
   liveSiteUrl?: string;
+  order?: number;
 }
 
-export interface SkillData extends Models.Document {
+export interface SkillData {
+  _id: string;
   name: string;
   iconName?: string;
+  category?: string;
+  color?: string;
+  order?: number;
 }

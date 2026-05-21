@@ -6,7 +6,7 @@ export function Footer() {
       <div className="container">
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem', opacity: 0.6 }}>
           <Layers size={16} />
-          <p>Designed and built with React, Framer Motion, and Appwrite.</p>
+          <p>Designed and built with React, Framer Motion, and Sanity.</p>
         </div>
       </div>
     </footer>

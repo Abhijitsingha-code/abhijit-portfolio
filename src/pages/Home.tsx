@@ -10,13 +10,13 @@ import { ShieldCheck } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 interface HomeProps {
-  appwriteStatus: 'checking' | 'connected' | 'error';
+  sanityStatus: 'checking' | 'connected' | 'error';
   projects: ProjectData[];
   profile: ProfileData | null;
   skills: SkillData[];
 }
 
-export function Home({ appwriteStatus, projects, profile, skills }: HomeProps) {
+export function Home({ sanityStatus, projects, profile, skills }: HomeProps) {
   const { scrollYProgress } = useScroll();
   const opacity = useTransform(scrollYProgress, [0, 0.2], [1, 0]);
   const scale = useTransform(scrollYProgress, [0, 0.2], [1, 0.9]);
@@ -40,7 +40,7 @@ export function Home({ appwriteStatus, projects, profile, skills }: HomeProps) {
 
   return (
     <main>
-      <Hero profile={profile} appwriteStatus={appwriteStatus} opacity={opacity} scale={scale} />
+      <Hero profile={profile} sanityStatus={sanityStatus} opacity={opacity} scale={scale} />
       
       <About containerVariants={containerVariants} itemVariants={itemVariants} />
       
@@ -48,7 +48,7 @@ export function Home({ appwriteStatus, projects, profile, skills }: HomeProps) {
       
       <Projects projects={projects} />
 
-      {appwriteStatus !== 'connected' && (
+      {sanityStatus !== 'connected' && (
         <section id="setup" className="section container">
           <motion.div 
             initial={{ opacity: 0, scale: 0.95 }}
@@ -59,16 +59,16 @@ export function Home({ appwriteStatus, projects, profile, skills }: HomeProps) {
           >
             <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '1.5rem' }}>
               <ShieldCheck size={32} color="var(--accent)" />
-              <h3 style={{ fontSize: '1.8rem' }}>Backend Configuration</h3>
+              <h3 style={{ fontSize: '1.8rem' }}>Sanity Configuration</h3>
             </div>
             <p style={{ color: 'var(--text-muted)', fontSize: '1.1rem', marginBottom: '1.5rem' }}>
-              To fully unlock the real-time capabilities and database features, connect your Appwrite instance by creating a <code>.env</code> file in the project root:
+              To load live content, connect your Sanity project by creating a <code>.env</code> file in the project root:
             </p>
             <div style={{ background: '#000', padding: '1.5rem', borderRadius: '12px', border: '1px solid rgba(255,255,255,0.1)', overflowX: 'auto', marginBottom: '1.5rem' }}>
               <pre style={{ color: '#e2e8f0', fontFamily: 'monospace', fontSize: '1rem' }}>
-{`VITE_APPWRITE_ENDPOINT="https://cloud.appwrite.io/v1"
-VITE_APPWRITE_PROJECT="YOUR_PROJECT_ID"
-VITE_APPWRITE_DATABASE_ID="YOUR_DATABASE_ID"`}
+{`VITE_SANITY_PROJECT_ID="your_project_id"
+VITE_SANITY_DATASET="production"
+VITE_SANITY_API_VERSION="2024-01-01"`}
               </pre>
             </div>
             <p style={{ color: 'var(--text-muted)' }}>

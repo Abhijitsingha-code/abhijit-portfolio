@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Routes, Route, useLocation } from 'react-router-dom';
-import { account, databases, appwriteConfig } from './lib/appwrite';
+import { fetchProfile, fetchProjects, fetchSkills } from './lib/sanity.queries';
+import { sanityConfig } from './lib/sanity';
 import type { ProfileData, ProjectData, SkillData } from './types';
 import './index.css';
 
@@ -31,57 +32,37 @@ function App() {
   const [isMinimized, setIsMinimized] = useState(false);
   const [isClosed, setIsClosed] = useState(false);
 
-  const [appwriteStatus, setAppwriteStatus] = useState<'checking' | 'connected' | 'error'>('checking');
+  const [sanityStatus, setSanityStatus] = useState<'checking' | 'connected' | 'error'>('checking');
   const [projects, setProjects] = useState<ProjectData[]>([]);
   const [profile, setProfile] = useState<ProfileData | null>(null);
   const [skills, setSkills] = useState<SkillData[]>([]);
 
   useEffect(() => {
-    const initAppwrite = async () => {
-      try {
-        await account.get();
-        setAppwriteStatus('connected');
-      } catch (error: unknown) {
-        const appwriteError = error as { code?: number };
-        if (appwriteError?.code === 401) {
-          setAppwriteStatus('connected');
-        } else {
-          setAppwriteStatus('error');
-        }
+    const initSanity = async () => {
+      // Verify config is present before fetching
+      if (!sanityConfig.projectId) {
+        setSanityStatus('error');
+        return;
       }
 
-      if (appwriteConfig.databaseId) {
-        try {
-          if (appwriteConfig.projectsCollectionId) {
-            const res = await databases.listDocuments<ProjectData>(appwriteConfig.databaseId, appwriteConfig.projectsCollectionId);
-            setProjects(res.documents);
-          }
-        } catch (error) {
-          console.error("Failed to fetch projects data:", error);
-        }
+      try {
+        const [profileData, projectsData, skillsData] = await Promise.all([
+          fetchProfile(),
+          fetchProjects(),
+          fetchSkills(),
+        ]);
 
-        try {
-          if (appwriteConfig.profileCollectionId) {
-            const res = await databases.listDocuments<ProfileData>(appwriteConfig.databaseId, appwriteConfig.profileCollectionId);
-            if (res.documents.length > 0) {
-              setProfile(res.documents[0]);
-            }
-          }
-        } catch (error) {
-          console.error("Failed to fetch profile data:", error);
-        }
-
-        try {
-          if (appwriteConfig.skillsCollectionId) {
-            const res = await databases.listDocuments<SkillData>(appwriteConfig.databaseId, appwriteConfig.skillsCollectionId);
-            setSkills(res.documents);
-          }
-        } catch (error) {
-          console.error("Failed to fetch skills data:", error);
-        }
+        setProfile(profileData);
+        setProjects(projectsData);
+        setSkills(skillsData);
+        setSanityStatus('connected');
+      } catch (err) {
+        console.error('Sanity initialisation error:', err);
+        setSanityStatus('error');
       }
     };
-    initAppwrite();
+
+    initSanity();
   }, []);
 
   const containerVariants: Variants = { hidden: { opacity: 0 }, visible: { opacity: 1, transition: { staggerChildren: 0.1 } } };
@@ -156,7 +137,7 @@ function App() {
                 <div className="glass-content" style={{ height: isMaximized ? 'calc(100% - 64px)' : 'auto', overflowY: 'auto' }}>
                   <AnimatePresence mode="wait">
                     <Routes location={location} key={location.pathname}>
-                      <Route path="/" element={<AnimatedPage><Hero profile={profile} appwriteStatus={appwriteStatus} opacity={1} scale={1} /></AnimatedPage>} />
+                      <Route path="/" element={<AnimatedPage><Hero profile={profile} sanityStatus={sanityStatus} opacity={1} scale={1} /></AnimatedPage>} />
                       <Route path="/about" element={<AnimatedPage><About containerVariants={containerVariants} itemVariants={itemVariants} /></AnimatedPage>} />
                       <Route path="/skills" element={<AnimatedPage><Skills containerVariants={containerVariants} itemVariants={itemVariants} skills={skills} /></AnimatedPage>} />
                       <Route path="/projects" element={<AnimatedPage><Projects projects={projects} /></AnimatedPage>} />

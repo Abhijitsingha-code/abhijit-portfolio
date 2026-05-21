@@ -10,16 +10,16 @@ const FALLBACK_PROJECTS = [
   {
     title: 'Nexus SaaS Platform',
     description:
-      'A fully-fledged enterprise SaaS built with React and Appwrite for seamless authentication, real-time database modeling, and cloud storage — designed to scale from day one.',
+      'A fully-fledged enterprise SaaS built with React and Sanity for structured content management, dynamic data modeling, and a seamless editorial workflow — designed to scale from day one.',
     bg: 'linear-gradient(135deg, rgba(59, 130, 246, 0.3) 0%, rgba(139, 92, 246, 0.2) 100%)',
-    tags: ['React', 'Appwrite', 'TypeScript', 'Tailwind'],
+    tags: ['React', 'Sanity', 'TypeScript', 'Tailwind'],
     sourceCodeUrl: '#',
     liveSiteUrl: '#',
   },
   {
     title: 'Pulse Analytics Dashboard',
     description:
-      'Live analytics dashboard leveraging Appwrite Realtime subscriptions to track user behaviors and system metrics dynamically — with beautiful, animated charts.',
+      'Live analytics dashboard powered by Sanity GROQ queries and a Node.js backend to track user behaviors and system metrics dynamically — with beautiful, animated charts.',
     bg: 'linear-gradient(135deg, rgba(236, 72, 153, 0.3) 0%, rgba(245, 158, 11, 0.15) 100%)',
     tags: ['React', 'WebSockets', 'Recharts', 'Node.js'],
     sourceCodeUrl: '#',

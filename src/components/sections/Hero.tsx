@@ -5,16 +5,16 @@ import type { ProfileData } from '../../types';
 
 interface HeroProps {
   profile: ProfileData | null;
-  appwriteStatus: 'checking' | 'connected' | 'error';
+  sanityStatus: 'checking' | 'connected' | 'error';
   opacity: any;
   scale: any;
 }
 
-export function Hero({ profile, appwriteStatus, opacity, scale }: HeroProps) {
-  const isOnline = appwriteStatus === 'connected';
+export function Hero({ profile, sanityStatus, opacity, scale }: HeroProps) {
+  const isOnline = sanityStatus === 'connected';
   const statusLabel =
-    appwriteStatus === 'checking' ? 'Connecting…' :
-      appwriteStatus === 'connected' ? 'Available for Projects' :
+    sanityStatus === 'checking' ? 'Connecting…' :
+      sanityStatus === 'connected' ? 'Available for Projects' :
         'Offline Mode';
 
   return (
@@ -79,7 +79,7 @@ export function Hero({ profile, appwriteStatus, opacity, scale }: HeroProps) {
           }}
         >
           {profile?.description ||
-            'I architect high-performance web applications with React, Node.js, and Appwrite — focused on clean code and premium user experiences.'}
+            'I architect high-performance web applications with React, Node.js, and Sanity — focused on clean code and premium user experiences.'}
         </motion.p>
 
         {/* CTA buttons */}
@@ -133,7 +133,7 @@ export function Hero({ profile, appwriteStatus, opacity, scale }: HeroProps) {
           }}
         >
           <Sparkles size={12} style={{ color: 'var(--secondary)', opacity: 0.8 }} />
-          React · TypeScript · Node.js · Appwrite · Framer Motion
+          React · TypeScript · Node.js · Sanity · Framer Motion
           <Sparkles size={12} style={{ color: 'var(--secondary)', opacity: 0.8 }} />
         </motion.div>
       </div>

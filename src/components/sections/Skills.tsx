@@ -16,7 +16,7 @@ const DEFAULT_SKILLS = [
   { name: 'Framer Motion', iconName: 'Sparkles', category: 'Frontend', color: '#e879f9' },
   { name: 'Node.js', iconName: 'Server', category: 'Backend', color: '#5fa04e' },
   { name: 'PostgreSQL', iconName: 'Database', category: 'Backend', color: '#336791' },
-  { name: 'Appwrite', iconName: 'Shield', category: 'Backend', color: '#f02e65' },
+  { name: 'Sanity CMS', iconName: 'Database', category: 'Backend', color: '#f03e2f' },
   { name: 'REST APIs', iconName: 'Globe', category: 'Backend', color: '#60a5fa' },
   { name: 'Git & GitHub', iconName: 'GitBranch', category: 'Tools', color: '#f97316' },
   { name: 'VS Code', iconName: 'Code', category: 'Tools', color: '#0078d4' },
