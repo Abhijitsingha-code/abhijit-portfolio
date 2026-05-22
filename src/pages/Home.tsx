@@ -1,5 +1,5 @@
 import { useScroll, useTransform, type Variants } from 'framer-motion';
-import type { ProfileData, ProjectData, SkillData } from '../types';
+import type { ProfileData, ProjectData, SkillData, AboutData } from '../types';
 
 import { Hero } from '../components/sections/Hero';
 import { About } from '../components/sections/About';
@@ -14,9 +14,10 @@ interface HomeProps {
   projects: ProjectData[];
   profile: ProfileData | null;
   skills: SkillData[];
+  about: AboutData | null;
 }
 
-export function Home({ sanityStatus, projects, profile, skills }: HomeProps) {
+export function Home({ sanityStatus, projects, profile, skills, about }: HomeProps) {
   const { scrollYProgress } = useScroll();
   const opacity = useTransform(scrollYProgress, [0, 0.2], [1, 0]);
   const scale = useTransform(scrollYProgress, [0, 0.2], [1, 0.9]);
@@ -42,7 +43,7 @@ export function Home({ sanityStatus, projects, profile, skills }: HomeProps) {
     <main>
       <Hero profile={profile} sanityStatus={sanityStatus} opacity={opacity} scale={scale} />
       
-      <About containerVariants={containerVariants} itemVariants={itemVariants} />
+      <About containerVariants={containerVariants} itemVariants={itemVariants} about={about} />
       
       <Skills containerVariants={containerVariants} itemVariants={itemVariants} skills={skills} />
       

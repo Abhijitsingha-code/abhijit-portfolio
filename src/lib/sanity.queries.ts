@@ -1,5 +1,5 @@
 import { sanityClient } from './sanity';
-import type { ProfileData, ProjectData, SkillData } from '../types';
+import type { ProfileData, ProjectData, SkillData, AboutData } from '../types';
 
 // ─── GROQ Queries ────────────────────────────────────────────────────────────
 
@@ -59,5 +59,24 @@ export async function fetchSkills(): Promise<SkillData[]> {
   } catch (err) {
     console.error('Failed to fetch skills from Sanity:', err);
     return [];
+  }
+}
+
+export const ABOUT_QUERY = `*[_type == "about"][0]{
+  _id,
+  title,
+  subtitle,
+  bio,
+  stats,
+  highlights
+}`;
+
+export async function fetchAbout(): Promise<AboutData | null> {
+  try {
+    const data = await sanityClient.fetch<AboutData>(ABOUT_QUERY);
+    return data ?? null;
+  } catch (err) {
+    console.error('Failed to fetch about data from Sanity:', err);
+    return null;
   }
 }

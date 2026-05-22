@@ -28,3 +28,20 @@ export interface SkillData {
   color?: string;
   order?: number;
 }
+
+export interface AboutData {
+  _id: string;
+  title?: string;
+  subtitle?: string;
+  bio?: string[];
+  stats?: Array<{
+    value: string;
+    label: string;
+    color: string;
+  }>;
+  highlights?: Array<{
+    iconName: string;
+    label: string;
+    color: string;
+  }>;
+}

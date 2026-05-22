@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react';
 import { Routes, Route, useLocation } from 'react-router-dom';
-import { fetchProfile, fetchProjects, fetchSkills } from './lib/sanity.queries';
+import { fetchProfile, fetchProjects, fetchSkills, fetchAbout } from './lib/sanity.queries';
 import { sanityConfig } from './lib/sanity';
-import type { ProfileData, ProjectData, SkillData } from './types';
+import type { ProfileData, ProjectData, SkillData, AboutData } from './types';
 import { Loader2 } from 'lucide-react';
 import './index.css';
 
@@ -37,6 +37,7 @@ function App() {
   const [projects, setProjects] = useState<ProjectData[]>([]);
   const [profile, setProfile] = useState<ProfileData | null>(null);
   const [skills, setSkills] = useState<SkillData[]>([]);
+  const [about, setAbout] = useState<AboutData | null>(null);
 
   useEffect(() => {
     const initSanity = async () => {
@@ -47,15 +48,17 @@ function App() {
       }
 
       try {
-        const [profileData, projectsData, skillsData] = await Promise.all([
+        const [profileData, projectsData, skillsData, aboutData] = await Promise.all([
           fetchProfile(),
           fetchProjects(),
           fetchSkills(),
+          fetchAbout(),
         ]);
 
         setProfile(profileData);
         setProjects(projectsData);
         setSkills(skillsData);
+        setAbout(aboutData);
         setSanityStatus('connected');
       } catch (err) {
         console.error('Sanity initialisation error:', err);
@@ -189,7 +192,7 @@ function App() {
                     ) : (
                       <Routes location={location} key={location.pathname}>
                         <Route path="/" element={<AnimatedPage><Hero profile={profile} sanityStatus={sanityStatus} opacity={1} scale={1} /></AnimatedPage>} />
-                        <Route path="/about" element={<AnimatedPage><About containerVariants={containerVariants} itemVariants={itemVariants} /></AnimatedPage>} />
+                        <Route path="/about" element={<AnimatedPage><About containerVariants={containerVariants} itemVariants={itemVariants} about={about} /></AnimatedPage>} />
                         <Route path="/skills" element={<AnimatedPage><Skills containerVariants={containerVariants} itemVariants={itemVariants} skills={skills} /></AnimatedPage>} />
                         <Route path="/projects" element={<AnimatedPage><Projects projects={projects} /></AnimatedPage>} />
                         <Route path="/contact" element={<AnimatedPage><Contact /></AnimatedPage>} />
