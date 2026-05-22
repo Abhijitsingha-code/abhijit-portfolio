@@ -34,6 +34,12 @@ export const profile = {
         accept: '.pdf',
       },
     },
+    {
+      name: 'email',
+      title: 'Email Address',
+      type: 'string',
+      description: 'Your primary contact email address.',
+    },
   ],
   preview: {
     select: {

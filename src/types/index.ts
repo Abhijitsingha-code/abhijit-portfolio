@@ -6,6 +6,7 @@ export interface ProfileData {
   title?: string;
   description?: string;
   resumeUrl?: string;
+  email?: string;
 }
 
 export interface ProjectData {

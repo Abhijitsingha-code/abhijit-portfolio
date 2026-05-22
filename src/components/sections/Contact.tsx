@@ -9,7 +9,11 @@ const SOCIAL_LINKS = [
   { icon: Link2, label: 'Twitter', href: 'https://twitter.com/abhijitsingha', color: '#1d9bf0' },
 ];
 
-export function Contact() {
+interface ContactProps {
+  email?: string;
+}
+
+export function Contact({ email }: ContactProps) {
   const form = useRef<HTMLFormElement>(null);
   const [formState, setFormState] = useState({ name: '', email: '', message: '' });
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -98,8 +102,8 @@ export function Contact() {
             {
               icon: Mail,
               label: 'Email',
-              value: 'hi@abhijitsingha.dev',
-              href: 'mailto:hi@abhijitsingha.dev',
+              value: email || 'hi@abhijitsingha.dev',
+              href: `mailto:${email || 'hi@abhijitsingha.dev'}`,
               color: '#60a5fa',
               bg: 'rgba(96, 165, 250, 0.08)',
             },

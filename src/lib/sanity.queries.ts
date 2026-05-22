@@ -8,7 +8,8 @@ export const PROFILE_QUERY = `*[_type == "profile"][0]{
   name,
   title,
   description,
-  "resumeUrl": resumeFile.asset->url
+  "resumeUrl": resumeFile.asset->url,
+  email
 }`;
 
 export const PROJECTS_QUERY = `*[_type == "project"] | order(order asc, _createdAt desc){

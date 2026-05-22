@@ -195,7 +195,7 @@ function App() {
                         <Route path="/about" element={<AnimatedPage><About containerVariants={containerVariants} itemVariants={itemVariants} about={about} /></AnimatedPage>} />
                         <Route path="/skills" element={<AnimatedPage><Skills containerVariants={containerVariants} itemVariants={itemVariants} skills={skills} /></AnimatedPage>} />
                         <Route path="/projects" element={<AnimatedPage><Projects projects={projects} /></AnimatedPage>} />
-                        <Route path="/contact" element={<AnimatedPage><Contact /></AnimatedPage>} />
+                        <Route path="/contact" element={<AnimatedPage><Contact email={profile?.email} /></AnimatedPage>} />
                       </Routes>
                     )}
                   </AnimatePresence>
