@@ -52,9 +52,16 @@ export const contactPage = {
             },
             {
               name: 'iconName',
-              title: 'Lucide Icon Name',
+              title: 'Lucide or Pre-defined Icon Name',
               type: 'string',
-              description: 'PascalCase icon name from lucide-react, e.g. Github, Linkedin, Twitter, Link2',
+              description: 'PascalCase icon name from lucide-react (e.g. Github, Linkedin, Twitter) or custom brand names (e.g. Leetcode, Codeforces, HackerRank, CodeChef, GeeksforGeeks, HackerEarth).',
+            },
+            {
+              name: 'iconSvg',
+              title: 'Raw SVG Markup',
+              type: 'text',
+              rows: 3,
+              description: 'Optional. Paste raw SVG XML markup here (e.g., from simpleicons.org) if the icon is not available in Lucide.',
             },
             {
               name: 'href',

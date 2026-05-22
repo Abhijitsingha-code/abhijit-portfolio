@@ -65,6 +65,7 @@ export interface ContactPageSocialLink {
   _key: string;
   label: string;
   iconName?: string;
+  iconSvg?: string;
   href: string;
   color?: string;
 }

@@ -714,3 +714,25 @@ input:focus, textarea:focus {
   animation: mac-blink 1.5s step-end infinite;
 }
 
+/* =========================================
+   Custom SVG Icons
+========================================= */
+.custom-svg-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+}
+
+.custom-svg-icon svg {
+  width: 100% !important;
+  height: 100% !important;
+  fill: currentColor;
+}
+
+.custom-svg-icon svg[stroke] {
+  stroke: currentColor;
+}
+
+

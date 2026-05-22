@@ -109,6 +109,7 @@ export const CONTACT_PAGE_QUERY = `*[_type == "contactPage"][0]{
     _key,
     label,
     iconName,
+    iconSvg,
     href,
     color
   }
