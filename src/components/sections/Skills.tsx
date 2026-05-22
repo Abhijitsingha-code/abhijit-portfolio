@@ -9,21 +9,6 @@ interface SkillsProps {
   skills: SkillData[];
 }
 
-const DEFAULT_SKILLS = [
-  { name: 'React', iconName: 'Boxes', category: 'Frontend', color: '#61dafb' },
-  { name: 'TypeScript', iconName: 'Terminal', category: 'Frontend', color: '#3178c6' },
-  { name: 'Tailwind CSS', iconName: 'Layers', category: 'Frontend', color: '#38bdf8' },
-  { name: 'Framer Motion', iconName: 'Sparkles', category: 'Frontend', color: '#e879f9' },
-  { name: 'Node.js', iconName: 'Server', category: 'Backend', color: '#5fa04e' },
-  { name: 'PostgreSQL', iconName: 'Database', category: 'Backend', color: '#336791' },
-  { name: 'Sanity CMS', iconName: 'Database', category: 'Backend', color: '#f03e2f' },
-  { name: 'REST APIs', iconName: 'Globe', category: 'Backend', color: '#60a5fa' },
-  { name: 'Git & GitHub', iconName: 'GitBranch', category: 'Tools', color: '#f97316' },
-  { name: 'VS Code', iconName: 'Code', category: 'Tools', color: '#0078d4' },
-  { name: 'Figma', iconName: 'Pen', category: 'Tools', color: '#ff7262' },
-  { name: 'React Native', iconName: 'Smartphone', category: 'Mobile', color: '#61dafb' },
-];
-
 const CATEGORY_META: Record<string, { label: string; color: string; bg: string }> = {
   Frontend: { label: 'Frontend', color: '#60a5fa', bg: 'rgba(96, 165, 250, 0.08)' },
   Backend: { label: 'Backend', color: '#34d399', bg: 'rgba(52, 211, 153, 0.08)' },
@@ -32,10 +17,19 @@ const CATEGORY_META: Record<string, { label: string; color: string; bg: string }
 };
 
 export function Skills({ containerVariants, itemVariants, skills }: SkillsProps) {
-  const displaySkills = skills.length > 0 ? skills : DEFAULT_SKILLS;
+  const displaySkills = skills;
 
-  // Group by category
-  const categories = Array.from(new Set(displaySkills.map((s: any) => s.category ?? 'Other')));
+  // Group by category in a predefined sorted order
+  const CATEGORY_ORDER = ['Frontend', 'Backend', 'Mobile', 'Tools'];
+  const categories = Array.from(new Set(displaySkills.map((s: any) => s.category ?? 'Other')))
+    .sort((a, b) => {
+      const idxA = CATEGORY_ORDER.indexOf(a);
+      const idxB = CATEGORY_ORDER.indexOf(b);
+      if (idxA === -1 && idxB === -1) return a.localeCompare(b);
+      if (idxA === -1) return 1;
+      if (idxB === -1) return -1;
+      return idxA - idxB;
+    });
 
   return (
     <section id="skills" className="section container">
@@ -74,79 +68,58 @@ export function Skills({ containerVariants, itemVariants, skills }: SkillsProps)
         </motion.div>
 
         {/* Skills grouped by category */}
-        {skills.length > 0 ? (
-          // Flat list when data comes from DB (no category grouping)
-          <motion.div variants={itemVariants} style={{ display: 'flex', flexWrap: 'wrap', gap: '0.75rem' }}>
-            {displaySkills.map((skill, index) => {
-              const IconComponent =
-                skill.iconName && (LucideIcons as any)[skill.iconName]
-                  ? (LucideIcons as any)[skill.iconName]
-                  : LucideIcons.Code;
-              return (
-                <motion.div
-                  key={skill.name + index}
-                  whileHover={{ y: -4, scale: 1.04 }}
-                  transition={{ type: 'spring', stiffness: 300 }}
-                  className="skill-tag"
+        {/* Skills grouped by category */}
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
+          {categories.map((cat) => {
+            const catSkills = displaySkills.filter((s: any) => (s.category ?? 'Other') === cat);
+            const meta = CATEGORY_META[cat] ?? { label: cat, color: 'var(--text-muted)', bg: 'rgba(255,255,255,0.04)' };
+            return (
+              <motion.div key={cat} variants={itemVariants}>
+                {/* Category label */}
+                <div
+                  style={{
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: '0.5rem',
+                    background: meta.bg,
+                    border: `1px solid ${meta.color}25`,
+                    borderRadius: '100px',
+                    padding: '4px 14px',
+                    fontSize: '0.78rem',
+                    fontWeight: 700,
+                    color: meta.color,
+                    letterSpacing: '0.08em',
+                    textTransform: 'uppercase',
+                    marginBottom: '1rem',
+                  }}
                 >
-                  <IconComponent size={15} />
-                  {skill.name}
-                </motion.div>
-              );
-            })}
-          </motion.div>
-        ) : (
-          // Grouped view for default skills
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
-            {categories.map((cat) => {
-              const catSkills = DEFAULT_SKILLS.filter((s) => (s as any).category === cat);
-              const meta = CATEGORY_META[cat] ?? { label: cat, color: 'var(--text-muted)', bg: 'rgba(255,255,255,0.04)' };
-              return (
-                <motion.div key={cat} variants={itemVariants}>
-                  {/* Category label */}
-                  <div
-                    style={{
-                      display: 'inline-flex',
-                      alignItems: 'center',
-                      gap: '0.5rem',
-                      background: meta.bg,
-                      border: `1px solid ${meta.color}25`,
-                      borderRadius: '100px',
-                      padding: '4px 14px',
-                      fontSize: '0.78rem',
-                      fontWeight: 700,
-                      color: meta.color,
-                      letterSpacing: '0.08em',
-                      textTransform: 'uppercase',
-                      marginBottom: '1rem',
-                    }}
-                  >
-                    {meta.label}
-                  </div>
-                  {/* Skills row */}
-                  <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.65rem' }}>
-                    {catSkills.map((skill, index) => {
-                      const IconComponent =
-                        (LucideIcons as any)[skill.iconName] ?? LucideIcons.Code;
-                      return (
-                        <motion.div
-                          key={skill.name + index}
-                          whileHover={{ y: -4, scale: 1.04 }}
-                          transition={{ type: 'spring', stiffness: 300 }}
-                          className="skill-tag"
-                          style={{ borderColor: `${skill.color}22` }}
-                        >
-                          <IconComponent size={15} style={{ color: skill.color }} />
-                          {skill.name}
-                        </motion.div>
-                      );
-                    })}
-                  </div>
-                </motion.div>
-              );
-            })}
-          </div>
-        )}
+                  {meta.label}
+                </div>
+                {/* Skills row */}
+                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.65rem' }}>
+                  {catSkills.map((skill, index) => {
+                    const IconComponent =
+                      skill.iconName && (LucideIcons as any)[skill.iconName]
+                        ? (LucideIcons as any)[skill.iconName]
+                        : LucideIcons.Code;
+                    return (
+                      <motion.div
+                        key={skill.name + index}
+                        whileHover={{ y: -4, scale: 1.04 }}
+                        transition={{ type: 'spring', stiffness: 300 }}
+                        className="skill-tag"
+                        style={{ borderColor: skill.color ? `${skill.color}22` : undefined }}
+                      >
+                        <IconComponent size={15} style={{ color: skill.color }} />
+                        {skill.name}
+                      </motion.div>
+                    );
+                  })}
+                </div>
+              </motion.div>
+            );
+          })}
+        </div>
       </motion.div>
     </section>
   );

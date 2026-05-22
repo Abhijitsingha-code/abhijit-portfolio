@@ -6,34 +6,13 @@ interface ProjectsProps {
   projects: ProjectData[];
 }
 
-const FALLBACK_PROJECTS = [
-  {
-    title: 'Nexus SaaS Platform',
-    description:
-      'A fully-fledged enterprise SaaS built with React and Sanity for structured content management, dynamic data modeling, and a seamless editorial workflow — designed to scale from day one.',
-    bg: 'linear-gradient(135deg, rgba(59, 130, 246, 0.3) 0%, rgba(139, 92, 246, 0.2) 100%)',
-    tags: ['React', 'Sanity', 'TypeScript', 'Tailwind'],
-    sourceCodeUrl: '#',
-    liveSiteUrl: '#',
-  },
-  {
-    title: 'Pulse Analytics Dashboard',
-    description:
-      'Live analytics dashboard powered by Sanity GROQ queries and a Node.js backend to track user behaviors and system metrics dynamically — with beautiful, animated charts.',
-    bg: 'linear-gradient(135deg, rgba(236, 72, 153, 0.3) 0%, rgba(245, 158, 11, 0.15) 100%)',
-    tags: ['React', 'WebSockets', 'Recharts', 'Node.js'],
-    sourceCodeUrl: '#',
-    liveSiteUrl: '#',
-  },
-];
-
 const ACCENT_COLORS = [
   { glow: 'rgba(79, 142, 247, 0.25)', border: 'rgba(79, 142, 247, 0.2)', tag: 'rgba(79, 142, 247, 0.15)' },
   { glow: 'rgba(240, 67, 106, 0.25)', border: 'rgba(240, 67, 106, 0.2)', tag: 'rgba(240, 67, 106, 0.12)' },
 ];
 
 export function Projects({ projects }: ProjectsProps) {
-  const displayProjects = projects.length > 0 ? projects : FALLBACK_PROJECTS as unknown as ProjectData[];
+  const displayProjects = projects;
 
   return (
     <section id="projects" className="section container">
@@ -234,7 +213,7 @@ export function Projects({ projects }: ProjectsProps) {
                 </h3>
                 <p
                   style={{
-                    color: 'rgba(255,255,255,0.55)',
+                    color: 'var(--text-muted)',
                     fontSize: '0.95rem',
                     lineHeight: 1.65,
                     marginBottom: '1.75rem',
