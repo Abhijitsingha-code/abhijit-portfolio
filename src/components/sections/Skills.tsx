@@ -1,12 +1,13 @@
 import * as LucideIcons from 'lucide-react';
 import { Zap } from 'lucide-react';
 import { motion, type Variants } from 'framer-motion';
-import type { SkillData } from '../../types';
+import type { SkillData, SkillsPageData } from '../../types';
 
 interface SkillsProps {
   containerVariants: Variants;
   itemVariants: Variants;
   skills: SkillData[];
+  pageData?: SkillsPageData;
 }
 
 const CATEGORY_META: Record<string, { label: string; color: string; bg: string }> = {
@@ -16,8 +17,11 @@ const CATEGORY_META: Record<string, { label: string; color: string; bg: string }
   Mobile: { label: 'Mobile', color: '#a78bfa', bg: 'rgba(167, 139, 250, 0.08)' },
 };
 
-export function Skills({ containerVariants, itemVariants, skills }: SkillsProps) {
+export function Skills({ containerVariants, itemVariants, skills, pageData }: SkillsProps) {
   const displaySkills = skills;
+  const eyebrow = pageData?.eyebrow || 'Toolkit';
+  const title = pageData?.title || 'Technical <span class="text-gradient-accent">Arsenal</span>';
+  const description = pageData?.description || 'The technologies and tools I use to bring ideas to life.';
 
   // Group by category in a predefined sorted order
   const CATEGORY_ORDER = ['Frontend', 'Backend', 'Mobile', 'Tools'];
@@ -42,7 +46,7 @@ export function Skills({ containerVariants, itemVariants, skills }: SkillsProps)
       >
         {/* Section Header */}
         <motion.div variants={itemVariants} style={{ marginBottom: '3rem' }}>
-          <div className="section-eyebrow">Toolkit</div>
+          <div className="section-eyebrow">{eyebrow}</div>
           <div style={{ display: 'flex', alignItems: 'flex-start', gap: '1.2rem' }}>
             <div
               style={{
@@ -57,11 +61,12 @@ export function Skills({ containerVariants, itemVariants, skills }: SkillsProps)
               <Zap size={30} />
             </div>
             <div>
-              <h2 style={{ fontSize: 'clamp(2rem, 5vw, 3rem)', fontFamily: 'var(--font-display)', marginBottom: '0.4rem' }}>
-                Technical <span className="text-gradient-accent">Arsenal</span>
-              </h2>
+              <h2
+                style={{ fontSize: 'clamp(2rem, 5vw, 3rem)', fontFamily: 'var(--font-display)', marginBottom: '0.4rem' }}
+                dangerouslySetInnerHTML={{ __html: title }}
+              />
               <p style={{ color: 'var(--text-muted)', fontSize: '1rem' }}>
-                The technologies and tools I use to bring ideas to life.
+                {description}
               </p>
             </div>
           </div>

@@ -703,3 +703,14 @@ input:focus, textarea:focus {
   0%, 100% { transform: scale(0.85); opacity: 0.25; }
   50%       { transform: scale(1.15); opacity: 0.45; }
 }
+
+/* MacBook Boot Loader Animations */
+@keyframes mac-blink {
+  0%, 49% { opacity: 1; }
+  50%, 100% { opacity: 0; }
+}
+
+.mac-blink-animation {
+  animation: mac-blink 1.5s step-end infinite;
+}
+

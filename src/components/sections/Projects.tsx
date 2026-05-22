@@ -1,9 +1,10 @@
 import { ArrowUpRight, GitBranch, Globe, Terminal, ExternalLink } from 'lucide-react';
 import { motion } from 'framer-motion';
-import type { ProjectData } from '../../types';
+import type { ProjectData, ProjectsPageData } from '../../types';
 
 interface ProjectsProps {
   projects: ProjectData[];
+  pageData?: ProjectsPageData;
 }
 
 const ACCENT_COLORS = [
@@ -11,8 +12,11 @@ const ACCENT_COLORS = [
   { glow: 'rgba(240, 67, 106, 0.25)', border: 'rgba(240, 67, 106, 0.2)', tag: 'rgba(240, 67, 106, 0.12)' },
 ];
 
-export function Projects({ projects }: ProjectsProps) {
+export function Projects({ projects, pageData }: ProjectsProps) {
   const displayProjects = projects;
+  const eyebrow = pageData?.eyebrow || 'Portfolio';
+  const title = pageData?.title || 'Featured <span class="text-gradient-accent">Case Studies</span>';
+  const description = pageData?.description || 'A curated selection of my latest technical achievements and creative builds.';
 
   return (
     <section id="projects" className="section container">
@@ -24,19 +28,17 @@ export function Projects({ projects }: ProjectsProps) {
         transition={{ duration: 0.6 }}
         style={{ minWidth: '850px', maxWidth: '850px', margin: '0 auto 3.5rem' }}
       >
-        <div className="section-eyebrow">Portfolio</div>
+        <div className="section-eyebrow">{eyebrow}</div>
         <h2
           style={{
             fontSize: 'clamp(2.2rem, 5vw, 3.5rem)',
             marginBottom: '1rem',
             fontFamily: 'var(--font-display)',
           }}
-        >
-          Featured{' '}
-          <span className="text-gradient-accent">Case Studies</span>
-        </h2>
+          dangerouslySetInnerHTML={{ __html: title }}
+        />
         <p style={{ color: 'var(--text-muted)', fontSize: '1.1rem', maxWidth: '560px', lineHeight: 1.7 }}>
-          A curated selection of my latest technical achievements and creative builds.
+          {description}
         </p>
       </motion.div>
 

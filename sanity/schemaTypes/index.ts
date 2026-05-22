@@ -5,5 +5,8 @@ import { profile } from './profile';
 import { project } from './project';
 import { skill } from './skill';
 import { about } from './about';
+import { skillsPage } from './skillsPage';
+import { projectsPage } from './projectsPage';
+import { contactPage } from './contactPage';
 
-export const schemaTypes = [profile, project, skill, about];
+export const schemaTypes = [profile, project, skill, about, skillsPage, projectsPage, contactPage];

@@ -1,19 +1,38 @@
 import { useState, useRef } from 'react';
-import { Send, Loader2, Mail, Link2, CheckCircle2, AlertCircle, MapPin, Clock } from 'lucide-react';
+import * as LucideIcons from 'lucide-react';
+import { Send, Loader2, Mail, CheckCircle2, AlertCircle, MapPin, Clock } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import emailjs from '@emailjs/browser';
-
-const SOCIAL_LINKS = [
-  { icon: Link2, label: 'GitHub', href: 'https://github.com/abhijitsingha', color: '#f0f6fc' },
-  { icon: Link2, label: 'LinkedIn', href: 'https://linkedin.com/in/abhijitsingha', color: '#0a66c2' },
-  { icon: Link2, label: 'Twitter', href: 'https://twitter.com/abhijitsingha', color: '#1d9bf0' },
-];
+import type { ContactPageData } from '../../types';
 
 interface ContactProps {
   email?: string;
+  pageData?: ContactPageData;
 }
 
-export function Contact({ email }: ContactProps) {
+const getIcon = (name?: string) => {
+  if (!name) return LucideIcons.Link2;
+  const lucideAny = LucideIcons as any;
+  if (lucideAny[name]) {
+    return lucideAny[name];
+  }
+  const lower = name.toLowerCase();
+  if (lower === 'mail') return LucideIcons.Mail;
+  if (lower === 'mappin') return LucideIcons.MapPin;
+  if (lower === 'clock') return LucideIcons.Clock;
+
+  // Try case-insensitive lookup
+  const matchedKey = Object.keys(LucideIcons).find(
+    (k) => k.toLowerCase() === lower
+  );
+  if (matchedKey && lucideAny[matchedKey]) {
+    return lucideAny[matchedKey];
+  }
+
+  return LucideIcons.Link2;
+};
+
+export function Contact({ email, pageData }: ContactProps) {
   const form = useRef<HTMLFormElement>(null);
   const [formState, setFormState] = useState({ name: '', email: '', message: '' });
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -60,6 +79,17 @@ export function Contact({ email }: ContactProps) {
     }
   };
 
+  const eyebrow = pageData?.eyebrow || 'Contact';
+  const title = pageData?.title || "Let's <span class=\"text-gradient-primary\">Build</span> Something";
+  const description = pageData?.description || "Have a project in mind, or just want to say hi? I'm always open to new opportunities and conversations.";
+  const location = pageData?.location || 'India · Remote';
+  const responseTime = pageData?.responseTime || 'Within 24 hours';
+  const socialLinks = pageData?.socialLinks || [
+    { _key: 'github', label: 'GitHub', iconName: 'Github', href: 'https://github.com/abhijitsingha', color: '#f0f6fc' },
+    { _key: 'linkedin', label: 'LinkedIn', iconName: 'Linkedin', href: 'https://linkedin.com/in/abhijitsingha', color: '#0a66c2' },
+    { _key: 'twitter', label: 'Twitter', iconName: 'Twitter', href: 'https://twitter.com/abhijitsingha', color: '#1d9bf0' },
+  ];
+
   return (
     <section id="contact" className="section container">
       {/* Header */}
@@ -70,12 +100,13 @@ export function Contact({ email }: ContactProps) {
         transition={{ duration: 0.6 }}
         style={{ minWidth: '850px', maxWidth: '850px', margin: '0 auto 3rem' }}
       >
-        <div className="section-eyebrow">Contact</div>
-        <h2 style={{ fontSize: 'clamp(2.2rem, 5vw, 3.5rem)', marginBottom: '0.8rem', fontFamily: 'var(--font-display)' }}>
-          Let's <span className="text-gradient-primary">Build</span> Something
-        </h2>
+        <div className="section-eyebrow">{eyebrow}</div>
+        <h2
+          style={{ fontSize: 'clamp(2.2rem, 5vw, 3.5rem)', marginBottom: '0.8rem', fontFamily: 'var(--font-display)' }}
+          dangerouslySetInnerHTML={{ __html: title }}
+        />
         <p style={{ color: 'var(--text-muted)', fontSize: '1.05rem', maxWidth: '540px', lineHeight: 1.7 }}>
-          Have a project in mind, or just want to say hi? I'm always open to new opportunities and conversations.
+          {description}
         </p>
       </motion.div>
 
@@ -110,14 +141,14 @@ export function Contact({ email }: ContactProps) {
             {
               icon: MapPin,
               label: 'Location',
-              value: 'India · Remote',
+              value: location,
               color: '#f472b6',
               bg: 'rgba(244, 114, 182, 0.08)',
             },
             {
               icon: Clock,
               label: 'Response Time',
-              value: 'Within 24 hours',
+              value: responseTime,
               color: '#34d399',
               bg: 'rgba(52, 211, 153, 0.08)',
             },
@@ -169,42 +200,45 @@ export function Contact({ email }: ContactProps) {
               Find me on
             </div>
             <div style={{ display: 'flex', gap: '0.6rem' }}>
-              {SOCIAL_LINKS.map(({ icon: Icon, label, href, color }) => (
-                <a
-                  key={label}
-                  href={href}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  aria-label={label}
-                  style={{
-                    width: '42px',
-                    height: '42px',
-                    borderRadius: '11px',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    background: 'rgba(255,255,255,0.04)',
-                    border: '1px solid rgba(255,255,255,0.08)',
-                    color: 'var(--text-muted)',
-                    textDecoration: 'none',
-                    transition: 'all 0.22s ease',
-                  }}
-                  onMouseEnter={(e) => {
-                    (e.currentTarget as HTMLElement).style.color = color;
-                    (e.currentTarget as HTMLElement).style.background = `${color}14`;
-                    (e.currentTarget as HTMLElement).style.borderColor = `${color}35`;
-                    (e.currentTarget as HTMLElement).style.transform = 'translateY(-3px)';
-                  }}
-                  onMouseLeave={(e) => {
-                    (e.currentTarget as HTMLElement).style.color = 'var(--text-muted)';
-                    (e.currentTarget as HTMLElement).style.background = 'rgba(255,255,255,0.04)';
-                    (e.currentTarget as HTMLElement).style.borderColor = 'rgba(255,255,255,0.08)';
-                    (e.currentTarget as HTMLElement).style.transform = 'translateY(0)';
-                  }}
-                >
-                  <Icon size={18} />
-                </a>
-              ))}
+              {socialLinks.map(({ label, iconName, href, color }) => {
+                const Icon = getIcon(iconName);
+                return (
+                  <a
+                    key={label}
+                    href={href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label={label}
+                    style={{
+                      width: '42px',
+                      height: '42px',
+                      borderRadius: '11px',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      background: 'rgba(255,255,255,0.04)',
+                      border: '1px solid rgba(255,255,255,0.08)',
+                      color: 'var(--text-muted)',
+                      textDecoration: 'none',
+                      transition: 'all 0.22s ease',
+                    }}
+                    onMouseEnter={(e) => {
+                      (e.currentTarget as HTMLElement).style.color = color || 'var(--primary)';
+                      (e.currentTarget as HTMLElement).style.background = `${color || 'var(--primary)'}14`;
+                      (e.currentTarget as HTMLElement).style.borderColor = `${color || 'var(--primary)'}35`;
+                      (e.currentTarget as HTMLElement).style.transform = 'translateY(-3px)';
+                    }}
+                    onMouseLeave={(e) => {
+                      (e.currentTarget as HTMLElement).style.color = 'var(--text-muted)';
+                      (e.currentTarget as HTMLElement).style.background = 'rgba(255,255,255,0.04)';
+                      (e.currentTarget as HTMLElement).style.borderColor = 'rgba(255,255,255,0.08)';
+                      (e.currentTarget as HTMLElement).style.transform = 'translateY(0)';
+                    }}
+                  >
+                    <Icon size={18} />
+                  </a>
+                );
+              })}
             </div>
           </div>
         </motion.aside>

@@ -1,5 +1,5 @@
 import { sanityClient } from './sanity';
-import type { ProfileData, ProjectData, SkillData, AboutData } from '../types';
+import type { ProfileData, ProjectData, SkillData, AboutData, SkillsPageData, ProjectsPageData, ContactPageData } from '../types';
 
 // ─── GROQ Queries ────────────────────────────────────────────────────────────
 
@@ -78,6 +78,70 @@ export async function fetchAbout(): Promise<AboutData | null> {
     return data ?? null;
   } catch (err) {
     console.error('Failed to fetch about data from Sanity:', err);
+    return null;
+  }
+}
+
+// ─── Singleton Page Settings Queries ──────────────────────────────────────────
+
+export const SKILLS_PAGE_QUERY = `*[_type == "skillsPage"][0]{
+  _id,
+  eyebrow,
+  title,
+  description
+}`;
+
+export const PROJECTS_PAGE_QUERY = `*[_type == "projectsPage"][0]{
+  _id,
+  eyebrow,
+  title,
+  description
+}`;
+
+export const CONTACT_PAGE_QUERY = `*[_type == "contactPage"][0]{
+  _id,
+  eyebrow,
+  title,
+  description,
+  location,
+  responseTime,
+  socialLinks[]{
+    _key,
+    label,
+    iconName,
+    href,
+    color
+  }
+}`;
+
+// ─── Fetch helpers for page settings ─────────────────────────────────────────
+
+export async function fetchSkillsPage(): Promise<SkillsPageData | null> {
+  try {
+    const data = await sanityClient.fetch<SkillsPageData>(SKILLS_PAGE_QUERY);
+    return data ?? null;
+  } catch (err) {
+    console.error('Failed to fetch skills page settings:', err);
+    return null;
+  }
+}
+
+export async function fetchProjectsPage(): Promise<ProjectsPageData | null> {
+  try {
+    const data = await sanityClient.fetch<ProjectsPageData>(PROJECTS_PAGE_QUERY);
+    return data ?? null;
+  } catch (err) {
+    console.error('Failed to fetch projects page settings:', err);
+    return null;
+  }
+}
+
+export async function fetchContactPage(): Promise<ContactPageData | null> {
+  try {
+    const data = await sanityClient.fetch<ContactPageData>(CONTACT_PAGE_QUERY);
+    return data ?? null;
+  } catch (err) {
+    console.error('Failed to fetch contact page settings:', err);
     return null;
   }
 }

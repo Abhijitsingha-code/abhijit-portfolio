@@ -1,9 +1,8 @@
 import { useEffect, useState } from 'react';
 import { Routes, Route, useLocation } from 'react-router-dom';
-import { fetchProfile, fetchProjects, fetchSkills, fetchAbout } from './lib/sanity.queries';
+import { fetchProfile, fetchProjects, fetchSkills, fetchAbout, fetchSkillsPage, fetchProjectsPage, fetchContactPage } from './lib/sanity.queries';
 import { sanityConfig } from './lib/sanity';
-import type { ProfileData, ProjectData, SkillData, AboutData } from './types';
-import { Loader2 } from 'lucide-react';
+import type { ProfileData, ProjectData, SkillData, AboutData, SkillsPageData, ProjectsPageData, ContactPageData } from './types';
 import './index.css';
 
 import { Navbar } from './components/layout/Navbar';
@@ -12,6 +11,7 @@ import { About } from './components/sections/About';
 import { Skills } from './components/sections/Skills';
 import { Projects } from './components/sections/Projects';
 import { Contact } from './components/sections/Contact';
+import { BootLoader } from './components/layout/BootLoader';
 import { motion, AnimatePresence, useDragControls, type Variants } from 'framer-motion';
 
 const AnimatedPage = ({ children }: { children: React.ReactNode }) => (
@@ -34,40 +34,72 @@ function App() {
   const [isClosed, setIsClosed] = useState(false);
 
   const [sanityStatus, setSanityStatus] = useState<'checking' | 'connected' | 'error'>('checking');
+  const [showBootLoader, setShowBootLoader] = useState(true);
   const [projects, setProjects] = useState<ProjectData[]>([]);
   const [profile, setProfile] = useState<ProfileData | null>(null);
   const [skills, setSkills] = useState<SkillData[]>([]);
   const [about, setAbout] = useState<AboutData | null>(null);
+  const [skillsPage, setSkillsPage] = useState<SkillsPageData | null>(null);
+  const [projectsPage, setProjectsPage] = useState<ProjectsPageData | null>(null);
+  const [contactPage, setContactPage] = useState<ContactPageData | null>(null);
+
+  const initSanity = async () => {
+    setSanityStatus('checking');
+    // Verify config is present before fetching
+    if (!sanityConfig.projectId) {
+      setSanityStatus('error');
+      return;
+    }
+
+    try {
+      const [
+        profileData,
+        projectsData,
+        skillsData,
+        aboutData,
+        skillsPageData,
+        projectsPageData,
+        contactPageData,
+      ] = await Promise.all([
+        fetchProfile(),
+        fetchProjects(),
+        fetchSkills(),
+        fetchAbout(),
+        fetchSkillsPage(),
+        fetchProjectsPage(),
+        fetchContactPage(),
+      ]);
+
+      setProfile(profileData);
+      setProjects(projectsData);
+      setSkills(skillsData);
+      setAbout(aboutData);
+      setSkillsPage(skillsPageData);
+      setProjectsPage(projectsPageData);
+      setContactPage(contactPageData);
+      setSanityStatus('connected');
+    } catch (err) {
+      console.error('Sanity initialisation error:', err);
+      setSanityStatus('error');
+    }
+  };
 
   useEffect(() => {
-    const initSanity = async () => {
-      // Verify config is present before fetching
-      if (!sanityConfig.projectId) {
-        setSanityStatus('error');
-        return;
-      }
-
-      try {
-        const [profileData, projectsData, skillsData, aboutData] = await Promise.all([
-          fetchProfile(),
-          fetchProjects(),
-          fetchSkills(),
-          fetchAbout(),
-        ]);
-
-        setProfile(profileData);
-        setProjects(projectsData);
-        setSkills(skillsData);
-        setAbout(aboutData);
-        setSanityStatus('connected');
-      } catch (err) {
-        console.error('Sanity initialisation error:', err);
-        setSanityStatus('error');
-      }
-    };
-
     initSanity();
   }, []);
+
+  useEffect(() => {
+    if (sanityStatus === 'connected') {
+      const timer = setTimeout(() => {
+        setShowBootLoader(false);
+      }, 800);
+      return () => clearTimeout(timer);
+    }
+  }, [sanityStatus]);
+
+  const handleRetry = () => {
+    initSanity();
+  };
 
   const containerVariants: Variants = { hidden: { opacity: 0 }, visible: { opacity: 1, transition: { staggerChildren: 0.1 } } };
   const itemVariants: Variants = { hidden: { y: 20, opacity: 0, scale: 0.95 }, visible: { y: 0, opacity: 1, scale: 1, transition: { type: 'spring', stiffness: 100 } } };
@@ -80,6 +112,16 @@ function App() {
 
   return (
     <>
+      <AnimatePresence>
+        {showBootLoader && (
+          <BootLoader
+            isComplete={sanityStatus === 'connected'}
+            isError={sanityStatus === 'error'}
+            onRetry={handleRetry}
+          />
+        )}
+      </AnimatePresence>
+
       <Navbar profile={profile} onDockClick={handleDockClick} />
 
       <main className="app-container" style={{ padding: isMaximized ? '28px 0 0 0' : undefined }}>
@@ -140,63 +182,27 @@ function App() {
                 </div>
                 <div className="glass-content" style={{ height: isMaximized ? 'calc(100% - 64px)' : 'auto', }}>
                   <AnimatePresence mode="wait">
-                    {sanityStatus === 'checking' ? (
-                      <motion.div
-                        key="loader"
-                        initial={{ opacity: 0, scale: 0.95 }}
-                        animate={{ opacity: 1, scale: 1 }}
-                        exit={{ opacity: 0, scale: 0.95 }}
-                        transition={{ duration: 0.3 }}
-                        style={{
-                          display: 'flex',
-                          flexDirection: 'column',
-                          alignItems: 'center',
-                          justifyContent: 'center',
-                          minHeight: '340px',
-                          gap: '1.2rem',
-                        }}
-                      >
-                        <div style={{ position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                          <div style={{
-                            position: 'absolute',
-                            width: '50px',
-                            height: '50px',
-                            borderRadius: '50%',
-                            background: 'var(--primary)',
-                            filter: 'blur(16px)',
-                            opacity: 0.3,
-                            animation: 'pulse-glow 2s ease-in-out infinite'
-                          }} />
-                          <Loader2
-                            className="animate-spin"
-                            size={32}
-                            style={{
-                              color: 'var(--primary)',
-                              position: 'relative',
-                              zIndex: 1,
-                            }}
-                          />
-                        </div>
-                        <span
-                          style={{
-                            color: 'var(--text-muted)',
-                            fontSize: '0.85rem',
-                            fontWeight: 600,
-                            letterSpacing: '0.12em',
-                            textTransform: 'uppercase',
-                          }}
-                        >
-                          Syncing with Sanity...
-                        </span>
-                      </motion.div>
-                    ) : (
+                    {profile ? (
                       <Routes location={location} key={location.pathname}>
                         <Route path="/" element={<AnimatedPage><Hero profile={profile} sanityStatus={sanityStatus} opacity={1} scale={1} /></AnimatedPage>} />
                         <Route path="/about" element={<AnimatedPage><About containerVariants={containerVariants} itemVariants={itemVariants} about={about} /></AnimatedPage>} />
-                        <Route path="/skills" element={<AnimatedPage><Skills containerVariants={containerVariants} itemVariants={itemVariants} skills={skills} /></AnimatedPage>} />
-                        <Route path="/projects" element={<AnimatedPage><Projects projects={projects} /></AnimatedPage>} />
-                        <Route path="/contact" element={<AnimatedPage><Contact email={profile?.email} /></AnimatedPage>} />
+                        <Route path="/skills" element={<AnimatedPage><Skills containerVariants={containerVariants} itemVariants={itemVariants} skills={skills} pageData={skillsPage || undefined} /></AnimatedPage>} />
+                        <Route path="/projects" element={<AnimatedPage><Projects projects={projects} pageData={projectsPage || undefined} /></AnimatedPage>} />
+                        <Route path="/contact" element={<AnimatedPage><Contact email={profile?.email} pageData={contactPage || undefined} /></AnimatedPage>} />
                       </Routes>
+                    ) : (
+                      <motion.div
+                        key="placeholder"
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        style={{
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          minHeight: '340px',
+                        }}
+                      />
                     )}
                   </AnimatePresence>
                 </div>
