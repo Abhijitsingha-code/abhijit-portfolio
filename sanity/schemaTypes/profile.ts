@@ -40,6 +40,15 @@ export const profile = {
       type: 'string',
       description: 'Your primary contact email address.',
     },
+    {
+      name: 'logo',
+      title: 'Profile Logo / Favicon',
+      type: 'image',
+      description: 'Upload an image to use as your website favicon and logo.',
+      options: {
+        hotspot: true,
+      },
+    },
   ],
   preview: {
     select: {

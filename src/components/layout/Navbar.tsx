@@ -29,7 +29,20 @@ export function Navbar({ profile, onDockClick }: { profile: ProfileData | null, 
           <NavLink
             to="/"
             className={({ isActive }) => `menubar-item bold ${isActive ? 'active' : ''}`}
+            style={{ display: 'inline-flex', alignItems: 'center', gap: '6px' }}
           >
+            {profile?.logoUrl && (
+              <img
+                src={profile.logoUrl}
+                alt="Logo"
+                style={{
+                  width: '16px',
+                  height: '16px',
+                  objectFit: 'contain',
+                  borderRadius: '4px',
+                }}
+              />
+            )}
             {profile?.name ?? 'Portfolio'}
           </NavLink>
           <NavLink to="/about"    className={({ isActive }) => `menubar-item ${isActive ? 'active' : ''}`}>About</NavLink>

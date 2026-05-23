@@ -9,6 +9,7 @@ export const PROFILE_QUERY = `*[_type == "profile"][0]{
   title,
   description,
   "resumeUrl": resumeFile.asset->url,
+  "logoUrl": logo.asset->url,
   email
 }`;
 

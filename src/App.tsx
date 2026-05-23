@@ -97,6 +97,15 @@ function App() {
     }
   }, [sanityStatus]);
 
+  useEffect(() => {
+    if (profile?.logoUrl) {
+      const faviconLink = document.getElementById('favicon') as HTMLLinkElement;
+      if (faviconLink) {
+        faviconLink.href = profile.logoUrl;
+      }
+    }
+  }, [profile]);
+
   const handleRetry = () => {
     initSanity();
   };
