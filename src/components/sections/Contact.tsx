@@ -339,7 +339,7 @@ export function Contact({ email, pageData }: ContactProps) {
               Find me on
             </div>
             <div style={{ display: 'flex', gap: '0.6rem' }}>
-              {socialLinks.map(({ label, iconName, iconSvg, href, color }) => {
+              {socialLinks?.map(({ label, iconName, iconSvg, href, color }) => {
                 const Icon = getIcon(iconName);
                 return (
                   <a
